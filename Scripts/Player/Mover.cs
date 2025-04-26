@@ -22,6 +22,6 @@ public class Mover : MonoBehaviour
 
     private void Update()
     {
-        _controller.Move(_input.GetDirection() * _speed * Time.deltaTime);
+        _controller.Move(_input.GetDirection(transform) * _speed * Time.deltaTime);
     }
 }
