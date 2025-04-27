@@ -3,19 +3,18 @@ using UnityEngine;
 
 public class CameraShakeHandler : MonoBehaviour
 {
-    [SerializeField] private ShootHandler _shootHandler;
+    [SerializeField] private WeaponAmmo _weaponAmmo;
 
-    private Vector3 _recoilDirection = new Vector3(-.4f, 0, 0f);
-    private float _speed = 5f;
+    private float _speed = 30f;
 
     private void OnEnable()
     {
-        _shootHandler.Shooted += OnShooted;
+        _weaponAmmo.Shooted += OnShooted;
     }
 
     private void OnDisable()
     {
-        _shootHandler.Shooted -= OnShooted;
+        _weaponAmmo.Shooted -= OnShooted;
     }
 
     private void OnShooted()
@@ -25,16 +24,27 @@ public class CameraShakeHandler : MonoBehaviour
 
     private IEnumerator Recoil()
     {
-        float time = .2f;
+        float time = .28f;
         Vector3 initialRotation = transform.localEulerAngles;
+        Vector3 recoilDirection = GetRandomRecoilDirection();
 
         while (time > 0)
         {
-            transform.localEulerAngles = Vector3.Lerp(transform.localEulerAngles + _recoilDirection, transform.localEulerAngles,_speed * Time.deltaTime);
-            time -= Time.deltaTime;
             yield return null;
-        }
 
-        transform.localEulerAngles = initialRotation;
+            transform.localEulerAngles = Vector3.Lerp(transform.localEulerAngles + recoilDirection, initialRotation, _speed * Time.deltaTime);
+            time -= Time.deltaTime;
+        }
+    }
+
+    private Vector3 GetRandomRecoilDirection()
+    {
+        float minValue = 5f;
+        float maxValue = 20f;
+
+        float xValue = Random.Range(minValue,maxValue);
+        float zValue = Random.Range(-maxValue, maxValue);
+
+        return new Vector3(-xValue, 0, zValue);
     }
 }
